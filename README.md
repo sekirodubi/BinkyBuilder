@@ -13,3 +13,5 @@ Simply drag & drop `sample_mod` onto the `BinkyBuilder.exe` to build the require
 The tools `bnk2json.exe` and `converter_test.exe` were kindly provided by ChainFailure.
 
 Made with the help of ChainFailure and MagicalShion.
+
+GitHub workflows adapted from [WitchyBND](https://github.com/ividyon/WitchyBND)

@@ -65,7 +65,7 @@ int currentDialogueId = 0;
 int currentDialogueSet = 0;
 string currentNpcId = "";
 
-// NPC_ID|Dialogue|Dialogue Set|WEM
+// NPC_ID|Dialogue|Dialogue Set|WAV
 var engine = new FileHelperEngine<ModSoundData>();
 var records = engine.ReadFile(dialogueCsvFile);
 

@@ -40,6 +40,9 @@
     <None Update="sample_mod\dialogue.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="sample_mod\TalkMsg.fmg.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="sample_mod\wavs\01_yes_indeed.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

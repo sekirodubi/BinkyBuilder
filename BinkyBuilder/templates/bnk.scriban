@@ -1,0 +1,20 @@
+{
+  "sections": [
+    {
+      "BKHD": {
+        "version": 135,
+        "bank_id": {{ bank_id }},
+        "language_fnv_hash": {{ language_fnv_hash }},
+        "wem_alignment": 16,
+        "project_id": 1906
+      }
+    },
+    {
+      "HIRC": {
+        "objects": [
+            {{ hirc_objects }}
+        ]
+      }
+    }
+  ]
+}

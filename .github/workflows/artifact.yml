@@ -1,0 +1,58 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Development artifact
+
+concurrency:
+  group: build
+  cancel-in-progress: false
+
+on:
+  push:
+    branches: [ "main" ]
+    tags-ignore:
+      - '**'
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  DOTNET_VERSION: '7.0.x'
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore packages
+        run: nuget restore ./BinkyBuilder.sln -LockedMode
+
+      - name: Install test runner
+        run: nuget install NUnit.ConsoleRunner -Version 3.16.3 -DirectDownload -OutputDirectory .
+
+      - name: Publish application
+        run: |
+          cd BinkyBuilder
+          dotnet publish -c Release --no-restore
+
+      # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'BinkyBuilder-SHA${{ github.sha }}'
+          path: './bin/publish'

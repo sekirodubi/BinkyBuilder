@@ -1,0 +1,6 @@
+{
+  "dialogue_file": "dialogue.csv",
+  "wav_folder": "wavs",
+  "mod_voice_bnk": "vc403",
+  "mod_language":  "enus"
+}

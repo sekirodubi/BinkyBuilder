@@ -1,0 +1,4 @@
+{
+    "ID": {{ msg_id }},
+    "Text": "{{ msg_dialogue }}"
+}

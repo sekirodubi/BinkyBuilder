@@ -1,0 +1,10 @@
+{
+    "id": {{ sound_object_id }},
+    "object": {
+        "Event": {
+            "actions": [
+                {{ action_id }}
+            ]
+        }
+    }
+}

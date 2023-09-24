@@ -1,0 +1,12 @@
+{
+    "id": {{ sound_object_id }},
+    "object": {
+        "Action": {
+            "action_type": "Play",
+            "initial_values": {
+                "external_id": {{ external_id }},
+                "data": "AAAABExk4ww"
+            }
+        }
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "id": {{ sound_object_id }},
+    "object": {
+        "Action": {
+            "action_type": "Stop_E_O",
+            "initial_values": {
+                "external_id": {{ external_id }},
+                "data": "AAAABAYA"
+            }
+        }
+    }
+}

@@ -1,0 +1,11 @@
+{
+  "FmgID": 1,
+  "Fmg": {
+    "Entries": [
+      {{ msg_entries }}
+],
+    "Version": 2,
+    "BigEndian": false,
+    "Compression": 1
+  }
+}

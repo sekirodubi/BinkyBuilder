@@ -107,8 +107,8 @@ foreach (var record in records)
         override_bus_id = 3170124113 }));
     hircObjects.Add(playTemplate.Render(new { sound_object_id = playActionObjectGuid, external_id = wemObjectGuid }));
     hircObjects.Add(stopTemplate.Render(new { sound_object_id = stopActionObjectGuid, external_id = wemObjectGuid }));
-
-    string msgId = $"{record.NpcId}00{1000 * record.DialogueSet + currentDialogueId * 10}";
+    string dialogueId = $"{1000 * record.DialogueSet + currentDialogueId * 10}".PadLeft(6, '0');
+    string msgId = $"{record.NpcId}{dialogueId}";
     talkMsgs[msgId] = record.Dialogue;
 
     string inGamePlayEvent = $"Play_v{msgId}";
@@ -168,13 +168,18 @@ File.Delete(Path.Combine(outputFolder, $"{modBnk}.bnkjson"));
 Console.WriteLine("Converting the WAVs to WEMs");
 string tempWemsFolder = Path.Combine(outputFolder, "wems");
 System.IO.Directory.CreateDirectory(tempWemsFolder);
+Console.WriteLine(tempWemsFolder);
 string wavToWemTool = Path.Combine(currentDirectory, "tools", "converter_test.exe");
 foreach (var kv in wavToWemIdDict)
 {
-    ProcessStartInfo wavToWemProcess = new ProcessStartInfo(wavToWemTool, AddQuotesIfRequired(kv.Key));
+    var originWav = AddQuotesIfRequired(kv.Key);
+    // Console.WriteLine($"KEY: {originWav}");
+    ProcessStartInfo wavToWemProcess = new ProcessStartInfo(wavToWemTool, originWav);
     Process.Start(wavToWemProcess).WaitForExit();
     
     File.Move(Path.Combine(currentDirectory, "test.wem"), Path.Combine(tempWemsFolder, $"{kv.Value}.wem"), true);
+
+    // Console.ReadLine();
 }
 
 Console.WriteLine($"Moving the WEMs to the folder: {enusFolder}");
@@ -182,10 +187,16 @@ foreach (var wem in wemPaths)
 {
     string wemFolder = wem.Substring(0, 2);
     string wemFinalFolder = Path.Combine(enusFolder, "wem", wemFolder);
+    string ogWem = Path.Combine(tempWemsFolder, $"{wem}.wem");
+    string destWem = Path.Combine(wemFinalFolder, $"{wem}.wem");
     System.IO.Directory.CreateDirectory(wemFinalFolder);
-    File.Move(Path.Combine(tempWemsFolder, $"{wem}.wem"), Path.Combine(wemFinalFolder, $"{wem}.wem"), true);
+    // Console.WriteLine($"og: {ogWem} dest: {destWem}");
+    File.Move(ogWem, destWem, true);
+    // Console.ReadLine();
 }
 Directory.Delete(tempWemsFolder, true);
+
+// Console.ReadLine();
 
 var talkData = File.ReadAllText(Path.Combine(modPath, "TalkMsg.fmg.json"));
 JObject talkDataParsed = JObject.Parse(talkData);
@@ -199,10 +210,20 @@ foreach (var msg in talkMsgs)
         msg_id = msg.Key
     }));
 
-    JObject obj = new JObject();
-    obj.Add("ID", Int32.Parse(msg.Key));
-    obj.Add("Text", msg.Value);
-    ((JArray)talkDataParsed["Fmg"]["Entries"]).Add(obj);
+    try
+    {
+        // Console.WriteLine($"JSON STUFF: **{msg.Key}**");
+        JObject obj = new JObject();
+        obj.Add("ID", Int32.Parse(msg.Key));
+        obj.Add("Text", msg.Value);
+        ((JArray)talkDataParsed["Fmg"]["Entries"]).Add(obj);
+        
+        // Console.ReadLine();
+    } catch (Exception e)
+    {
+        errorWriter.WriteLine(e);
+    }
+    
 }
 
 // outputs a new TalkParam.csv that can be imported by DSMapStudio
@@ -228,3 +249,5 @@ static string AddQuotesIfRequired(string path)
             "\"" + path + "\"" : path :
             string.Empty;
 }
+
+// Console.ReadLine();
